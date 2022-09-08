@@ -1,10 +1,9 @@
 import { Request } from "express";
-import { Product } from "../models/product.model";
 import ProductsService from "../services/products.service";
 
 class ProductsController {
   async postProduct(http_request: Request) {
-    const product: Product = http_request.body;
+    const product = http_request.body;
 
     try {
       await ProductsService.createProduct(product);

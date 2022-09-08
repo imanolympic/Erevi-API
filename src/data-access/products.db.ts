@@ -20,7 +20,7 @@ class ProductsDb {
           product.height_inches,
           product.width_inches,
           product.depth_inches,
-          product.image_urls[0],
+          product.image_url,
         ]
       );
       return result;
