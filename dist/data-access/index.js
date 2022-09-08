@@ -17,9 +17,10 @@ function connectClient() {
             return cachedClient;
         }
         const pool = new pg_1.Pool({
-            host: process.env.PS_DB_HOST,
-            database: process.env.PS_DB_NAME,
-            password: process.env.PS_DB_PASSWORD,
+            host: process.env.PS_PRODUCTS_DB_HOST,
+            database: process.env.PS_PRODUCTS_DB_NAME,
+            // user: process.env.PS_PRODUCTS_DB_USER,
+            // password: process.env.PS_PRODUCTS_DB_PASSWORD,
             port: 5432,
         });
         try {
@@ -30,6 +31,7 @@ function connectClient() {
         }
         catch (error) {
             console.log("Unable to connect to DB.");
+            console.log(error);
             process.exit(1);
         }
     });

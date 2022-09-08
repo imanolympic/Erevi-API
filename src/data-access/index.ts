@@ -8,9 +8,8 @@ export default async function connectClient(): Promise<PoolClient> {
   }
 
   const pool = new Pool({
-    host: process.env.PS_DB_HOST,
-    database: process.env.PS_DB_NAME,
-    password: process.env.PS_DB_PASSWORD,
+    host: process.env.PS_PRODUCTS_DB_HOST,
+    database: process.env.PS_PRODUCTS_DB_NAME,
     port: 5432,
   });
 
@@ -21,6 +20,7 @@ export default async function connectClient(): Promise<PoolClient> {
     return cachedClient;
   } catch (error) {
     console.log("Unable to connect to DB.");
+    console.log(error);
     process.exit(1);
   }
 }
