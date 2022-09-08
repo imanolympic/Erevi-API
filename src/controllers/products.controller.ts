@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { Product } from "../models/product.model";
 import ProductsService from "../services/products.service";
 
 class ProductsController {
@@ -18,9 +19,43 @@ class ProductsController {
     }
   }
 
+  async putProduct(http_request: Request) {
+    const product: Product = http_request.body;
+
+    try {
+      await ProductsService.updateProduct(product);
+      return {
+        status: 200,
+        message: "Successfully updated product.",
+        updateCount: 1,
+      };
+    } catch (error) {
+      console.log(error);
+      return { status: 400, message: `${error}`, updateCount: 0 };
+    }
+  }
+
   async getProducts() {
     try {
       const result = await ProductsService.fetchProducts();
+      return {
+        status: 200,
+        message: "Successfully fetched products.",
+        products: result,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        status: 400,
+        message: `${error}`,
+        products: [],
+      };
+    }
+  }
+
+  async getListedProducts() {
+    try {
+      const result = await ProductsService.fetchListedProducts();
       return {
         status: 200,
         message: "Successfully fetched products.",
@@ -51,7 +86,7 @@ class ProductsController {
       };
     } catch (error) {
       console.log(error);
-      return { status: 400, addCount: 0, message: `${error}` };
+      return { status: 400, message: `${error}`, product: {} };
     }
   }
 }
