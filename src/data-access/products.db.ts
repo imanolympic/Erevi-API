@@ -120,6 +120,22 @@ class ProductsDb {
       throw new Error(`Product with id '${id}' not found.`);
     }
   }
+
+  async deleteById(id: number) {
+    const client = await connectClient();
+
+    try {
+      const result = await client.query("DELETE FROM products WHERE id = $1;", [
+        id,
+      ]);
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new Error(
+        "Something went wrong while fetching a product from the database."
+      );
+    }
+  }
 }
 
 export default new ProductsDb();

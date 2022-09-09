@@ -37,4 +37,10 @@ router
       .then((response) => res.json(response))
   );
 
+router
+  .route("/:id")
+  .delete((req: Request, res: Response) =>
+    productsController.deleteProduct(req).then((response) => res.json(response))
+  );
+
 export default router;

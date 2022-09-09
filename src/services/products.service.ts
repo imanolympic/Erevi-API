@@ -41,6 +41,12 @@ class ProductsService {
     const result = await productsDb.fetchById(parsedId);
     return result;
   }
+
+  async deleteProductById(id: string) {
+    const parsedId: number = Number.parseInt(id);
+    const result = await productsDb.deleteById(parsedId);
+    return result;
+  }
 }
 
 export default new ProductsService();

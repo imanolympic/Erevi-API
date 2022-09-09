@@ -89,6 +89,22 @@ class ProductsController {
       return { status: 400, message: `${error}`, product: {} };
     }
   }
+
+  async deleteProduct(http_request: Request) {
+    const id = http_request.params.id;
+
+    try {
+      await ProductsService.deleteProductById(id);
+      return {
+        status: 200,
+        message: "Successfully deleted product.",
+        deleteCount: 1,
+      };
+    } catch (error) {
+      console.log(error);
+      return { status: 400, message: `${error}`, deleteCount: 0 };
+    }
+  }
 }
 
 export default new ProductsController();
