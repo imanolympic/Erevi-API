@@ -75,7 +75,9 @@ class ProductsDb {
     const client = await connectClient();
 
     try {
-      const result = await client.query("select * from products");
+      const result = await client.query(
+        "select * from products order by title asc"
+      );
       return result.rows;
     } catch (error: any) {
       throw new Error(
@@ -89,7 +91,7 @@ class ProductsDb {
 
     try {
       const result = await client.query(
-        "select * from products where inventory > 0 and listed = true"
+        "select * from products where inventory > 0 and listed = true order by title asc"
       );
       return result.rows;
     } catch (error: any) {
