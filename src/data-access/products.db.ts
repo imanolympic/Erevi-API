@@ -1,14 +1,14 @@
 import connectClient from ".";
-import { ProductEntity } from "../models/product.model";
+import { Product } from "../models/product.model";
 
 class ProductsDb {
-  async insert(product: ProductEntity) {
+  async insert(product: Product) {
     const client = await connectClient();
 
     try {
       const result = await client.query(
         "insert into products" +
-          "(title, description, price, listed, inventory, weight_lbs, height_inches, width_inches, depth_inches, image_url)" +
+          "(title, description, price, listed, inventory, weight_lbs, height_inches, width_inches, length_inches, image_url)" +
           "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
         [
           product.title,
@@ -19,19 +19,20 @@ class ProductsDb {
           product.weight_lbs,
           product.height_inches,
           product.width_inches,
-          product.depth_inches,
+          product.length_inches,
           product.image_url,
         ]
       );
       return result;
     } catch (error: any) {
+      console.log(error);
       throw new Error(
         "Something went wrong while adding the product to the database."
       );
     }
   }
 
-  async update(id: number, product: ProductEntity) {
+  async update(id: number, product: Product) {
     const client = await connectClient();
 
     try {
@@ -45,7 +46,7 @@ class ProductsDb {
         weight_lbs = $7, \
         height_inches = $8, \
         width_inches = $9, \
-        depth_inches = $10, \
+        length_inches = $10, \
         image_url = $11 \
         where id = $1;`,
         [
@@ -58,7 +59,7 @@ class ProductsDb {
           product.weight_lbs,
           product.height_inches,
           product.width_inches,
-          product.depth_inches,
+          product.length_inches,
           product.image_url,
         ]
       );

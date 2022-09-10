@@ -1,10 +1,10 @@
 import createProduct from "../entities/product.entity";
 import productsDb from "../data-access/products.db";
-import { Product, ProductEntity } from "../models/product.model";
+import { Product } from "../models/product.model";
 
 class ProductsService {
   async createProduct(product: object) {
-    const newProduct: ProductEntity = createProduct(product);
+    const newProduct: Product = createProduct(product);
     const result = await productsDb.insert(newProduct);
     return result;
   }

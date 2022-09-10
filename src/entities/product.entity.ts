@@ -1,4 +1,4 @@
-import { Product, ProductEntity } from "../models/product.model";
+import { Product } from "../models/product.model";
 
 export default function createProduct({
   title,
@@ -10,8 +10,8 @@ export default function createProduct({
   weight_lbs = null,
   height_inches = null,
   width_inches = null,
-  depth_inches = null,
-}: any): ProductEntity {
+  length_inches = null,
+}: any): Product {
   // validate existence of required fields
   if (title === undefined) {
     throw new Error("Product must contain a title of type 'string'.");
@@ -58,8 +58,8 @@ export default function createProduct({
     throw new Error("Product 'height_inches' field must be of type 'number'.");
   }
 
-  if (depth_inches !== null && typeof depth_inches !== "number") {
-    throw new Error("Product 'depth_inches' field must be of type 'number'.");
+  if (length_inches !== null && typeof length_inches !== "number") {
+    throw new Error("Product 'length_inches' field must be of type 'number'.");
   }
 
   if (typeof listed !== "boolean") {
@@ -84,7 +84,7 @@ export default function createProduct({
     weight_lbs: weight_lbs,
     height_inches: height_inches,
     width_inches: width_inches,
-    depth_inches: depth_inches,
+    length_inches: length_inches,
     image_url: image_url,
   });
 }
