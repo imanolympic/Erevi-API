@@ -8,8 +8,10 @@ export default async function connectClient(): Promise<PoolClient> {
   }
 
   const pool = new Pool({
-    host: process.env.PS_PRODUCTS_DB_HOST,
-    database: process.env.PS_PRODUCTS_DB_NAME,
+    host: process.env.EREVI_DB_HOST,
+    database: process.env.EREVI_DB_NAME,
+    user: process.env.EREVI_DB_USER,
+    password: process.env.EREVI_DB_PASSWORD,
     port: 5432,
   });
 
