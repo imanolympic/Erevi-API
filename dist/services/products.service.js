@@ -22,9 +22,30 @@ class ProductsService {
             return result;
         });
     }
+    updateProduct(product) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (product.id === undefined || product.id === null) {
+                throw new Error(`Cannot update product with id '${product.id}'.`);
+            }
+            const parsedId = Number.parseInt(product.id);
+            const existing_product = yield this.fetchProductById(product.id);
+            if (Object.keys(existing_product).length === 0) {
+                throw new Error(`Product with id '${product.id}' not found.`);
+            }
+            const updated_product = (0, product_entity_1.default)(Object.assign(Object.assign({}, existing_product), product));
+            const result = yield products_db_1.default.update(parsedId, updated_product);
+            return result;
+        });
+    }
     fetchProducts() {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield products_db_1.default.fetchAll();
+            return result;
+        });
+    }
+    fetchListedProducts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield products_db_1.default.fetchListed();
             return result;
         });
     }
@@ -32,6 +53,13 @@ class ProductsService {
         return __awaiter(this, void 0, void 0, function* () {
             const parsedId = Number.parseInt(id);
             const result = yield products_db_1.default.fetchById(parsedId);
+            return result;
+        });
+    }
+    deleteProductById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const parsedId = Number.parseInt(id);
+            const result = yield products_db_1.default.deleteById(parsedId);
             return result;
         });
     }

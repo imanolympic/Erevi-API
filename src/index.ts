@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import productsRouter from "./routers/products.router";
+import shippingRouter from "./routers/shipping.router";
 
 import notFound from "./controllers/not-found";
 
@@ -18,6 +19,7 @@ app.get("/", (req, res, next) => {
   res.send("API works!");
 });
 app.use("/api/products", productsRouter);
+app.use("/api/shipping", shippingRouter);
 app.use("*", (_: Request, res: Response) => res.json(notFound()));
 
 const port = process.env.PORT || 5051;

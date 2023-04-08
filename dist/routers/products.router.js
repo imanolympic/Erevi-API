@@ -11,10 +11,21 @@ router
     .post((req, res) => products_controller_1.default.postProduct(req).then((response) => res.json(response)));
 router
     .route("")
+    .put((req, res) => products_controller_1.default.putProduct(req).then((response) => res.json(response)));
+router
+    .route("/")
     .get((req, res) => products_controller_1.default.getProducts().then((response) => res.json(response)));
+router
+    .route("/listed")
+    .get((req, res) => products_controller_1.default
+    .getListedProducts()
+    .then((response) => res.json(response)));
 router
     .route("/:id")
     .get((req, res) => products_controller_1.default
     .getProductById(req)
     .then((response) => res.json(response)));
+router
+    .route("/:id")
+    .delete((req, res) => products_controller_1.default.deleteProduct(req).then((response) => res.json(response)));
 exports.default = router;

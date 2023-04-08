@@ -31,10 +31,47 @@ class ProductsController {
             }
         });
     }
+    putProduct(http_request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const product = http_request.body;
+            try {
+                yield products_service_1.default.updateProduct(product);
+                return {
+                    status: 200,
+                    message: "Successfully updated product.",
+                    updateCount: 1,
+                };
+            }
+            catch (error) {
+                console.log(error);
+                return { status: 400, message: `${error}`, updateCount: 0 };
+            }
+        });
+    }
     getProducts() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield products_service_1.default.fetchProducts();
+                return {
+                    status: 200,
+                    message: "Successfully fetched products.",
+                    products: result,
+                };
+            }
+            catch (error) {
+                console.log(error);
+                return {
+                    status: 400,
+                    message: `${error}`,
+                    products: [],
+                };
+            }
+        });
+    }
+    getListedProducts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield products_service_1.default.fetchListedProducts();
                 return {
                     status: 200,
                     message: "Successfully fetched products.",
@@ -66,7 +103,24 @@ class ProductsController {
             }
             catch (error) {
                 console.log(error);
-                return { status: 400, addCount: 0, message: `${error}` };
+                return { status: 400, message: `${error}`, product: {} };
+            }
+        });
+    }
+    deleteProduct(http_request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = http_request.params.id;
+            try {
+                yield products_service_1.default.deleteProductById(id);
+                return {
+                    status: 200,
+                    message: "Successfully deleted product.",
+                    deleteCount: 1,
+                };
+            }
+            catch (error) {
+                console.log(error);
+                return { status: 400, message: `${error}`, deleteCount: 0 };
             }
         });
     }
