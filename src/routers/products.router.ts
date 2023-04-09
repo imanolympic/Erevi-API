@@ -10,7 +10,7 @@ router
   );
 
 router
-  .route("")
+  .route("/:id")
   .put((req: Request, res: Response) =>
     productsController.putProduct(req).then((response) => res.json(response))
   );
@@ -19,14 +19,6 @@ router
   .route("/")
   .get((req: Request, res: Response) =>
     productsController.getProducts().then((response) => res.json(response))
-  );
-
-router
-  .route("/listed")
-  .get((req: Request, res: Response) =>
-    productsController
-      .getListedProducts()
-      .then((response) => res.json(response))
   );
 
 router

@@ -10,16 +10,11 @@ router
     .route("")
     .post((req, res) => products_controller_1.default.postProduct(req).then((response) => res.json(response)));
 router
-    .route("")
+    .route("/:id")
     .put((req, res) => products_controller_1.default.putProduct(req).then((response) => res.json(response)));
 router
     .route("/")
     .get((req, res) => products_controller_1.default.getProducts().then((response) => res.json(response)));
-router
-    .route("/listed")
-    .get((req, res) => products_controller_1.default
-    .getListedProducts()
-    .then((response) => res.json(response)));
 router
     .route("/:id")
     .get((req, res) => products_controller_1.default

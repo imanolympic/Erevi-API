@@ -6,31 +6,87 @@ class ProductsController {
   async postProduct(http_request: Request) {
     const product = http_request.body;
 
+    if (!product) {
+      return {
+        status: 400,
+        message: "No product to add provided.",
+        insertCount: 0,
+      };
+    }
+
+    if (!product.title) {
+      return {
+        status: 400,
+        message: "Product must contain 'title' of type string.",
+        insertCount: 0,
+      };
+    }
+
+    if (!product.price) {
+      return {
+        status: 400,
+        message: "Product must contain 'price' of type number.",
+        insertCount: 0,
+      };
+    }
+
+    if (!product.image_url || !/^https?:\/\//i.test(product.image_url)) {
+      return {
+        status: 400,
+        message: "Product must contain valid 'image_url' of type string.",
+        insertCount: 0,
+      };
+    }
+
     try {
       await ProductsService.createProduct(product);
       return {
         status: 200,
         message: "Successfully created product.",
-        addCount: 1,
+        insertCount: 1,
       };
     } catch (error) {
-      console.log(error);
-      return { status: 400, message: `${error}`, addCount: 0 };
+      console.error(
+        "In products.controller.ts, in __postProduct__, failed to add product to database due to error:",
+        error
+      );
+      return { status: 400, message: `${error}`, insertCount: 0 };
     }
   }
 
   async putProduct(http_request: Request) {
-    const product: Product = http_request.body;
+    const id = http_request.params.id;
+
+    if (!id) {
+      return {
+        status: 400,
+        message: "Product id is required.",
+        updateCount: 0,
+      };
+    }
+
+    const product = http_request.body;
+
+    if (!product) {
+      return {
+        status: 400,
+        message: "No product to update provided.",
+        updateCount: 0,
+      };
+    }
 
     try {
-      await ProductsService.updateProduct(product);
+      await ProductsService.updateProduct(id, product);
       return {
         status: 200,
-        message: "Successfully updated product.",
+        message: `Successfully updated product with id: ${id}`,
         updateCount: 1,
       };
     } catch (error) {
-      console.log(error);
+      console.error(
+        `In products.controller.ts, in __putProduct__, error updating product with id: ${id} due to error:`,
+        error
+      );
       return { status: 400, message: `${error}`, updateCount: 0 };
     }
   }
@@ -44,25 +100,10 @@ class ProductsController {
         products: result,
       };
     } catch (error) {
-      console.log(error);
-      return {
-        status: 400,
-        message: `${error}`,
-        products: [],
-      };
-    }
-  }
-
-  async getListedProducts() {
-    try {
-      const result = await ProductsService.fetchListedProducts();
-      return {
-        status: 200,
-        message: "Successfully fetched products.",
-        products: result,
-      };
-    } catch (error) {
-      console.log(error);
+      console.error(
+        "In products.controller.ts, in __getProducts__, failed to fetch products due to error",
+        error
+      );
       return {
         status: 400,
         message: `${error}`,
@@ -74,24 +115,43 @@ class ProductsController {
   async getProductById(http_request: Request) {
     const id = http_request.params.id;
 
+    if (!id) {
+      return {
+        status: 400,
+        message: "Product id is required.",
+        product: {},
+      };
+    }
+
     try {
       const result = await ProductsService.fetchProductById(id);
       return {
         status: 200,
         message:
-          Object.keys(result).length === 0
+          Object.keys({}).length === 0
             ? `Product with id '${id}' not found.`
             : "Successfully fetched product.",
         product: result,
       };
     } catch (error) {
-      console.log(error);
+      console.error(
+        `In products.controller.ts, in __getProductById__, failed to fetch product with id: ${id} due to error:`,
+        error
+      );
       return { status: 400, message: `${error}`, product: {} };
     }
   }
 
   async deleteProduct(http_request: Request) {
     const id = http_request.params.id;
+
+    if (!id) {
+      return {
+        status: 400,
+        message: "Product id is required.",
+        deleteCount: 0,
+      };
+    }
 
     try {
       await ProductsService.deleteProductById(id);
@@ -101,7 +161,10 @@ class ProductsController {
         deleteCount: 1,
       };
     } catch (error) {
-      console.log(error);
+      console.error(
+        `In products.controller.ts, in __deleteProduct__, failed to delete product with id: ${id} due to error:`,
+        error
+      );
       return { status: 400, message: `${error}`, deleteCount: 0 };
     }
   }

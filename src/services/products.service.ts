@@ -5,24 +5,20 @@ import { Product } from "../models/product.model";
 class ProductsService {
   async createProduct(product: object) {
     const newProduct: Product = createProduct(product);
+
     const result = await productsDb.insert(newProduct);
     return result;
   }
 
-  async updateProduct(product: Product) {
-    if (product.id === undefined || product.id === null) {
-      throw new Error(`Cannot update product with id '${product.id}'.`);
-    }
-
-    const parsedId: number = Number.parseInt(product.id);
-    const existing_product = await this.fetchProductById(product.id);
-    if (Object.keys(existing_product).length === 0) {
-      throw new Error(`Product with id '${product.id}' not found.`);
+  async updateProduct(id: string, product: Product) {
+    const existing_product = await this.fetchProductById(id);
+    if (!existing_product) {
+      throw new Error(`Product with id '${id}' not found.`);
     }
 
     const updated_product = createProduct({ ...existing_product, ...product });
 
-    const result = await productsDb.update(parsedId, updated_product);
+    const result = await productsDb.update(id, updated_product);
     return result;
   }
 
@@ -31,20 +27,13 @@ class ProductsService {
     return result;
   }
 
-  async fetchListedProducts() {
-    const result = await productsDb.fetchListed();
-    return result;
-  }
-
   async fetchProductById(id: string) {
-    const parsedId: number = Number.parseInt(id);
-    const result = await productsDb.fetchById(parsedId);
+    const result = await productsDb.fetchById(id);
     return result;
   }
 
   async deleteProductById(id: string) {
-    const parsedId: number = Number.parseInt(id);
-    const result = await productsDb.deleteById(parsedId);
+    const result = await productsDb.deleteById(id);
     return result;
   }
 }

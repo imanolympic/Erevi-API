@@ -1,139 +1,93 @@
-import connectClient from ".";
+import connectClient from "./database";
 import { Product } from "../models/product.model";
+import ProductModel from "./productModel";
 
 class ProductsDb {
   async insert(product: Product) {
-    const client = await connectClient();
+    await connectClient();
+
+    const validatedProduct = new ProductModel(product);
 
     try {
-      const result = await client.query(
-        "insert into products" +
-          "(title, description, price, listed, inventory, weight_lbs, height_inches, width_inches, length_inches, image_url)" +
-          "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
-        [
-          product.title,
-          product.description,
-          product.price,
-          product.listed,
-          product.inventory,
-          product.weight_lbs,
-          product.height_inches,
-          product.width_inches,
-          product.length_inches,
-          product.image_url,
-        ]
-      );
+      const result = await validatedProduct.save();
       return result;
-    } catch (error: any) {
-      console.log(error);
+    } catch (error) {
+      console.error(
+        "In products.db.ts, in __insert__, failed to add product to database due to error:",
+        error
+      );
       throw new Error(
-        "Something went wrong while adding the product to the database."
+        "Failed to add product to database due to internal server error."
       );
     }
   }
 
-  async update(id: number, product: Product) {
-    const client = await connectClient();
+  async update(id: string, product: Product) {
+    await connectClient();
 
     try {
-      const result = await client.query(
-        `update products set \
-        title = $2, \
-        description = $3, \
-        price = $4, \
-        listed = $5, \
-        inventory = $6, \
-        weight_lbs = $7, \
-        height_inches = $8, \
-        width_inches = $9, \
-        length_inches = $10, \
-        image_url = $11 \
-        where id = $1;`,
-        [
-          id,
-          product.title,
-          product.description,
-          product.price,
-          product.listed,
-          product.inventory,
-          product.weight_lbs,
-          product.height_inches,
-          product.width_inches,
-          product.length_inches,
-          product.image_url,
-        ]
+      const result = await ProductModel.findOneAndUpdate({ _id: id }, product, {
+        new: true,
+      });
+      return result;
+    } catch (error) {
+      console.error(
+        "In products.db.ts, in __update__, failed to update product in database due to error:",
+        error
       );
-      return result.rowCount;
-    } catch (error: any) {
-      console.log(error);
       throw new Error(
-        "Something went wrong while updating the product in the database."
+        "Failed to update product in database due to internal server error."
       );
     }
   }
 
   async fetchAll() {
-    const client = await connectClient();
+    await connectClient();
 
     try {
-      const result = await client.query(
-        "select * from products order by title asc"
-      );
-      return result.rows;
-    } catch (error: any) {
-      throw new Error(
-        "Something went wrong while fetching products from the database."
-      );
-    }
-  }
-
-  async fetchListed() {
-    const client = await connectClient();
-
-    try {
-      const result = await client.query(
-        "select * from products where inventory > 0 and listed = true order by title asc"
-      );
-      return result.rows;
-    } catch (error: any) {
-      throw new Error(
-        "Something went wrong while fetching products from the database."
-      );
-    }
-  }
-
-  async fetchById(id: number) {
-    const client = await connectClient();
-
-    let result;
-    try {
-      result = await client.query("select * from products where id = $1", [id]);
-    } catch (error) {
-      console.log(error);
-      throw new Error(
-        "Something went wrong while fetching a product from the database."
-      );
-    }
-
-    if (result.rowCount == 1) {
-      return result.rows[0];
-    } else {
-      throw new Error(`Product with id '${id}' not found.`);
-    }
-  }
-
-  async deleteById(id: number) {
-    const client = await connectClient();
-
-    try {
-      const result = await client.query("DELETE FROM products WHERE id = $1;", [
-        id,
-      ]);
+      const result = await ProductModel.find();
       return result;
     } catch (error) {
-      console.log(error);
+      console.error(
+        "In products.db.ts, in __fetchAll__, failed to fetch products from database due to error:",
+        error
+      );
       throw new Error(
-        "Something went wrong while fetching a product from the database."
+        "Failed to fetch products from database due to internal server error."
+      );
+    }
+  }
+
+  async fetchById(id: string) {
+    await connectClient();
+
+    try {
+      const result = ProductModel.findById(id);
+      return result;
+    } catch (error) {
+      console.error(
+        "In products.db.ts, in __fetchById__, failed to fetch product from database due to error:",
+        error
+      );
+      throw new Error(
+        "Failed to fetch product from database due to internal server error."
+      );
+    }
+  }
+
+  async deleteById(id: string) {
+    await connectClient();
+
+    try {
+      const result = await ProductModel.findByIdAndDelete(id);
+      return result;
+    } catch (error) {
+      console.error(
+        "In products.db.ts, in __deleteById__, failed to delete product from database due to error:",
+        error
+      );
+      throw new Error(
+        "Failed to delete product from database due to internal server error."
       );
     }
   }
