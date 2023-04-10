@@ -1,13 +1,23 @@
 import createProduct from "../entities/product.entity";
-import productsDb from "../data-access/products.db";
+import productsDb from "../data-access/products.repository";
+import stripeService from "../stripe/stripe.service";
 import { Product } from "../models/product.model";
+import { v4 as uuidv4 } from "uuid";
 
 class ProductsService {
-  async createProduct(product: object) {
-    const newProduct: Product = createProduct(product);
+  async createProduct(product: any) {
+    const productId = uuidv4();
 
-    const result = await productsDb.insert(newProduct);
-    return result;
+    const newProduct: Product = createProduct({
+      _id: productId,
+      ...product,
+    });
+
+    await stripeService.createProduct(newProduct);
+
+    await productsDb.insert(newProduct);
+
+    return;
   }
 
   async updateProduct(id: string, product: Product) {
@@ -33,8 +43,11 @@ class ProductsService {
   }
 
   async deleteProductById(id: string) {
-    const result = await productsDb.deleteById(id);
-    return result;
+    await productsDb.deleteById(id);
+
+    await stripeService.deleteProduct(id);
+
+    return;
   }
 }
 

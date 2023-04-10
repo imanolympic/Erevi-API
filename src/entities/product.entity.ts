@@ -1,6 +1,20 @@
 import { Product } from "../models/product.model";
 
+export function validateProduct(product: any): Product {
+  if (!product.title) {
+    throw new Error("Product title is required.");
+  }
+  if (!product.price) {
+    throw new Error("Product price is required.");
+  }
+  if (!product.image_url) {
+    throw new Error("Product image_url is required.");
+  }
+  return product;
+}
+
 export default function createProduct({
+  _id,
   title,
   price,
   image_url,
@@ -13,6 +27,7 @@ export default function createProduct({
   length_inches = null,
 }: any): Product {
   return Object.freeze({
+    _id: _id,
     title: title,
     description: description,
     price: price,

@@ -1,13 +1,13 @@
 export interface Product {
-  id?: string;
-  title: String;
+  _id: string;
+  title: string;
   price: number;
-  description: String;
+  description: string;
   listed: boolean;
   inventory: number;
   weight_lbs: number | null;
   height_inches: number | null;
   width_inches: number | null;
   length_inches: number | null;
-  image_url: String;
+  image_url: string;
 }

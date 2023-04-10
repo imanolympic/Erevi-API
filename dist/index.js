@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const products_router_1 = __importDefault(require("./routers/products.router"));
 const shipping_router_1 = __importDefault(require("./routers/shipping.router"));
+const checkout_router_1 = __importDefault(require("./routers/checkout.router"));
 const not_found_1 = __importDefault(require("./controllers/not-found"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -20,6 +21,7 @@ app.get("/", (req, res, next) => {
 });
 app.use("/api/products", products_router_1.default);
 app.use("/api/shipping", shipping_router_1.default);
+app.use("/api/checkout", checkout_router_1.default);
 app.use("*", (_, res) => res.json((0, not_found_1.default)()));
 const port = process.env.PORT || 5051;
 app.listen(port, () => {

@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import productsRouter from "./routers/products.router";
 import shippingRouter from "./routers/shipping.router";
+import checkoutRouter from "./routers/checkout.router";
 
 import notFound from "./controllers/not-found";
 
@@ -20,6 +21,7 @@ app.get("/", (req, res, next) => {
 });
 app.use("/api/products", productsRouter);
 app.use("/api/shipping", shippingRouter);
+app.use("/api/checkout", checkoutRouter);
 app.use("*", (_: Request, res: Response) => res.json(notFound()));
 
 const port = process.env.PORT || 5051;

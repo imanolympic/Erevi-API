@@ -13,13 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_entity_1 = __importDefault(require("../entities/product.entity"));
-const products_db_1 = __importDefault(require("../data-access/products.db"));
+const products_repository_1 = __importDefault(require("../data-access/products.repository"));
+const stripe_service_1 = __importDefault(require("../stripe/stripe.service"));
+const uuid_1 = require("uuid");
 class ProductsService {
     createProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newProduct = (0, product_entity_1.default)(product);
-            const result = yield products_db_1.default.insert(newProduct);
-            return result;
+            const productId = (0, uuid_1.v4)();
+            const newProduct = (0, product_entity_1.default)(Object.assign({ _id: productId }, product));
+            yield stripe_service_1.default.createProduct(newProduct);
+            yield products_repository_1.default.insert(newProduct);
+            return;
         });
     }
     updateProduct(id, product) {
@@ -29,26 +33,27 @@ class ProductsService {
                 throw new Error(`Product with id '${id}' not found.`);
             }
             const updated_product = (0, product_entity_1.default)(Object.assign(Object.assign({}, existing_product), product));
-            const result = yield products_db_1.default.update(id, updated_product);
+            const result = yield products_repository_1.default.update(id, updated_product);
             return result;
         });
     }
     fetchProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield products_db_1.default.fetchAll();
+            const result = yield products_repository_1.default.fetchAll();
             return result;
         });
     }
     fetchProductById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield products_db_1.default.fetchById(id);
+            const result = yield products_repository_1.default.fetchById(id);
             return result;
         });
     }
     deleteProductById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield products_db_1.default.deleteById(id);
-            return result;
+            yield products_repository_1.default.deleteById(id);
+            yield stripe_service_1.default.deleteProduct(id);
+            return;
         });
     }
 }

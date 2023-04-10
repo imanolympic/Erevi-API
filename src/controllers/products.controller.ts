@@ -1,42 +1,11 @@
 import { Request } from "express";
-import { Product } from "../models/product.model";
 import ProductsService from "../services/products.service";
 
 class ProductsController {
   async postProduct(http_request: Request) {
     const product = http_request.body;
 
-    if (!product) {
-      return {
-        status: 400,
-        message: "No product to add provided.",
-        insertCount: 0,
-      };
-    }
-
-    if (!product.title) {
-      return {
-        status: 400,
-        message: "Product must contain 'title' of type string.",
-        insertCount: 0,
-      };
-    }
-
-    if (!product.price) {
-      return {
-        status: 400,
-        message: "Product must contain 'price' of type number.",
-        insertCount: 0,
-      };
-    }
-
-    if (!product.image_url || !/^https?:\/\//i.test(product.image_url)) {
-      return {
-        status: 400,
-        message: "Product must contain valid 'image_url' of type string.",
-        insertCount: 0,
-      };
-    }
+    console.log("controller product: ", product);
 
     try {
       await ProductsService.createProduct(product);
@@ -56,6 +25,7 @@ class ProductsController {
 
   async putProduct(http_request: Request) {
     const id = http_request.params.id;
+    const product = http_request.body;
 
     if (!id) {
       return {
@@ -64,8 +34,6 @@ class ProductsController {
         updateCount: 0,
       };
     }
-
-    const product = http_request.body;
 
     if (!product) {
       return {

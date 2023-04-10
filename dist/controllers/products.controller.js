@@ -17,34 +17,7 @@ class ProductsController {
     postProduct(http_request) {
         return __awaiter(this, void 0, void 0, function* () {
             const product = http_request.body;
-            if (!product) {
-                return {
-                    status: 400,
-                    message: "No product to add provided.",
-                    insertCount: 0,
-                };
-            }
-            if (!product.title) {
-                return {
-                    status: 400,
-                    message: "Product must contain 'title' of type string.",
-                    insertCount: 0,
-                };
-            }
-            if (!product.price) {
-                return {
-                    status: 400,
-                    message: "Product must contain 'price' of type number.",
-                    insertCount: 0,
-                };
-            }
-            if (!product.image_url || !/^https?:\/\//i.test(product.image_url)) {
-                return {
-                    status: 400,
-                    message: "Product must contain valid 'image_url' of type string.",
-                    insertCount: 0,
-                };
-            }
+            console.log("controller product: ", product);
             try {
                 yield products_service_1.default.createProduct(product);
                 return {
@@ -62,6 +35,7 @@ class ProductsController {
     putProduct(http_request) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = http_request.params.id;
+            const product = http_request.body;
             if (!id) {
                 return {
                     status: 400,
@@ -69,7 +43,6 @@ class ProductsController {
                     updateCount: 0,
                 };
             }
-            const product = http_request.body;
             if (!product) {
                 return {
                     status: 400,
