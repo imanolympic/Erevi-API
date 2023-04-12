@@ -39,6 +39,11 @@ class ProductsService {
 
   async fetchProductById(id: string) {
     const result = await productsDb.fetchById(id);
+
+    if (!result) {
+      throw new Error(`Product with id '${id}' not found.`);
+    }
+
     return result;
   }
 

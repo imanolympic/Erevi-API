@@ -78,18 +78,19 @@ class ProductsDb {
   async deleteById(id: string) {
     await connectClient();
 
-    try {
-      const result = await ProductModel.findByIdAndDelete(id);
-      return result;
-    } catch (error) {
-      console.error(
-        "In products.db.ts, in __deleteById__, failed to delete product from database due to error:",
-        error
-      );
-      throw new Error(
-        "Failed to delete product from database due to internal server error."
-      );
-    }
+    ProductModel.deleteOne({ _id: id })
+      .then((result) => {
+        return result;
+      })
+      .catch((error) => {
+        console.error(
+          "In products.db.ts, in __deleteById__, failed to delete product from database due to error:",
+          error
+        );
+        throw new Error(
+          "Failed to delete product from database due to internal server error."
+        );
+      });
   }
 }
 
